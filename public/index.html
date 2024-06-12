@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Domain Status Dashboard</title>
+  <script src="/socket.io/socket.io.js"></script> <!-- Include Socket.io library -->
+  <style>
+    body { font-family: Arial, sans-serif; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 8px 12px; border: 1px solid #ccc; }
+    th { background-color: #f4f4f4; }
+    tr { text-align: center; }
+  </style>
+</head>
+<body>
+  <h1>Domain Status Dashboard</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>ISP</th>
+        <th>Domain</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="domainStatusTable">
+      <tr id="vnpt"><td>VNPT</td><td></td><td></td></tr>
+      <tr id="fpt"><td>FPT</td><td></td><td></td></tr>
+      <tr id="vpn"><td>VPN</td><td></td><td></td></tr>
+      <tr id="viettel"><td>Viettel</td><td></td><td></td></tr>
+      <tr id="vina4g"><td>Vina4G</td><td></td><td></td></tr>
+      <tr id="viettel4g"><td>Viettel4G</td><td></td><td></td></tr>
+      <tr id="mobi"><td>Mobi</td><td></td><td></td></tr>
+    </tbody>
+  </table>
+
+  <script>
+    // Initialize the Socket.io client
+    const socket = io();
+
+    socket.on('connect', () => {
+      console.log('Connected to WebSocket server');
+    });
+
+    socket.on('statusUpdate', (data) => {
+      console.log('Received data:', data); // Log received data
+      const row = document.getElementById(data.isp.toLowerCase());
+
+      if (row) {
+        row.innerHTML = `
+          <td>${data.isp.toUpperCase()}</td>
+          <td>${data.domain}</td>
+          <td>${data.status}</td>
+        `;
+      } else {
+        console.error(`No row found for ISP: ${data.isp}`);
+      }
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from WebSocket server');
+    });
+  </script>
+</body>
+</html>
