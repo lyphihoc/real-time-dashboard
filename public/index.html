@@ -10,6 +10,12 @@
     th, td { padding: 8px 12px; border: 1px solid #ccc; }
     th { background-color: #f4f4f4; }
     tr { text-align: center; }
+    .status-ok { background-color: green; color: white; }
+    .status-stuck { background-color: red; color: white; animation: flickerAnimation 1s infinite; }
+    @keyframes flickerAnimation {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }}
   </style>
 </head>
 <body>
@@ -46,11 +52,17 @@
       const row = document.getElementById(data.isp.toLowerCase());
 
       if (row) {
-        row.innerHTML = `
-          <td>${data.isp.toUpperCase()}</td>
-          <td>${data.domain}</td>
-          <td>${data.status}</td>
-        `;
+        const statusCell = row.cells[2];
+        row.cells[1].textContent = data.domain;
+        statusCell.textContent = data.status;
+
+        if (data.status === 'ok') {
+          statusCell.className = 'status-ok';
+        } else if (data.status === 'stuck') {
+          statusCell.className = 'status-stuck';
+        } else {
+          statusCell.className = ''; // Reset class for any other status
+        }
       } else {
         console.error(`No row found for ISP: ${data.isp}`);
       }
