@@ -29,12 +29,6 @@ app.use(express.json());
 app.post('/update', async (req, res) => {
     const data = req.body;
 
-    // const updatedDomain = await Domain.findOneAndUpdate(
-    //     { domain },
-    //     { isp, status, color },
-    //     { upsert: true, new: true }
-    // );
-
     console.log('Emitting statusUpdate:', data); // Log emitted data
     io.emit('statusUpdate', data);
     res.status(200).send(data);
