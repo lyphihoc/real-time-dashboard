@@ -8,7 +8,7 @@ const path = require('path');
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Set up Mongoose
 // mongoose.connect('mongodb://localhost:27017/domains', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -43,9 +43,6 @@ app.post('/update', async (req, res) => {
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');
 });
-
-// Serve static files for the frontend
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Start the server
 server.listen(port, () => {
